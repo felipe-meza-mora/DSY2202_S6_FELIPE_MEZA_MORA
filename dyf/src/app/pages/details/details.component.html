@@ -1,0 +1,19 @@
+<div class="container mt-5" *ngIf="product">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <img class="card-img-top" src="{{ product.thumbnailUrl }}" alt="{{ product.title }}">
+          <div class="card-body">
+            <h2 class="card-title">{{ product.title }}</h2>
+            <p class="card-text"><strong>Descripción:</strong> {{ product.descripcion }}</p>
+            <p class="card-text"><strong>Precio:</strong>  <span class="text-danger fw-bold ms-2"> Precio {{ product.precio | currency:'':'symbol':'1.0-0' }}</span></p>
+            <div class="button-container">
+                <button class="btn btn-sm  btn-warning text-white">Comprar</button>
+                <a href="/home" class="btn btn-sm btn-outline-secondary">Volver</a>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
