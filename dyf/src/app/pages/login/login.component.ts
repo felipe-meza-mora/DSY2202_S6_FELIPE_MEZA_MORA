@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
         this.mensajeError = 'La contraseña ingresada es incorrecta';
       }
     } else {
-      this.mensajeError = 'El correo electrónico no está registrado';
+      //this.mensajeError = 'El correo electrónico no está registrado';
       this.correoNoRegistrado = true; // Establecer el estado de correo no registrado
     }
   }

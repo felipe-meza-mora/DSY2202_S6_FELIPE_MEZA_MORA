@@ -6,6 +6,9 @@ import { DetailsComponent } from './pages/details/details.component';
 import { LoginComponent } from './pages/login/login.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
+import { SalesComponent } from './pages/sales/sales.component';
+import { OrdersComponent } from './pages/orders/orders.component';
+import { ShoppingCartComponent } from './pages/shopping-cart/shopping-cart.component';
 
 
 export const routes: Routes = [
@@ -15,7 +18,10 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'details/:id', component: DetailsComponent},
     { path: 'perfil', component: PerfilComponent},
-    {path: 'change-password', component: ChangePasswordComponent},
+    { path: 'change-password', component: ChangePasswordComponent},
+    { path: 'shopping-cart', component: ShoppingCartComponent},
+    { path: 'sales', component: SalesComponent},
+    { path: 'orders', component: OrdersComponent},
     { path: '**', redirectTo: 'home' }
 ];
 

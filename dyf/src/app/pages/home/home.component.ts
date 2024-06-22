@@ -15,10 +15,14 @@ import { Product } from '../../models/product.model';
 export class HomeComponent implements OnInit, OnDestroy {
   products: Product[] = [];
   private routerSubscription: Subscription | undefined;
+  isAdmin: boolean = false;
+  cart: { product: Product, quantity: number }[] = [];
+  total: number = 0;
 
   constructor(private productService: ProductService, private router: Router) {}
 
   ngOnInit(): void {
+    this.checkAdmin(); 
     this.loadProducts();
 
     this.routerSubscription = this.router.events.pipe(
@@ -37,4 +41,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   private loadProducts(): void {
     this.products = this.productService.getProducts();
   }
+
+  private checkAdmin(): void {
+    const sesionUsuario = localStorage.getItem('sesionUsuario');
+    if (sesionUsuario) {
+      const userData = JSON.parse(sesionUsuario);
+      this.isAdmin = userData.permisos === 'admin';
+    }
+  }
+
+  addToCart(product: Product): void {
+    this.productService.addToCart(product);
+    alert(`${product.title} ha sido agregado al carrito`);
+  }
+
 }

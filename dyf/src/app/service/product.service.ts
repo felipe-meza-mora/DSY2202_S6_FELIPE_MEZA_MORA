@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Product} from "../models/product.model";
+import { BehaviorSubject } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -90,6 +91,9 @@ export class ProductService{
             "thumbnailUrl": "../../../assets/images/aros.png"
         }
     ];
+
+    private cart = new BehaviorSubject<{ product: Product, quantity: number }[]>(this.getCart());
+    cart$ = this.cart.asObservable();
     
     
     getProducts(): Product[]{
@@ -99,4 +103,46 @@ export class ProductService{
     getProductById(id: number): Product | undefined {
         return this.products.find(product => product.id === id);
     }
+
+    addToCart(product: Product): void {
+        let cart = this.getCart();
+        const existingProduct = cart.find(item => item.product.id === product.id);
+        if (existingProduct) {
+          existingProduct.quantity++;
+        } else {
+          cart.push({ product, quantity: 1 });
+        }
+        this.updateCart(cart);
+      }
+    
+      incrementQuantity(productId: number): void {
+        let cart = this.getCart();
+        const existingProduct = cart.find(item => item.product.id === productId);
+        if (existingProduct) {
+          existingProduct.quantity++;
+        }
+        this.updateCart(cart);
+      }
+    
+      decrementQuantity(productId: number): void {
+        let cart = this.getCart();
+        const existingProduct = cart.find(item => item.product.id === productId);
+        if (existingProduct) {
+          existingProduct.quantity--;
+          if (existingProduct.quantity === 0) {
+            cart = cart.filter(item => item.product.id !== productId);
+          }
+        }
+        this.updateCart(cart);
+      }
+    
+      getCart(): { product: Product, quantity: number }[] {
+        const cart = localStorage.getItem('cart');
+        return cart ? JSON.parse(cart) : [];
+      }
+    
+      private updateCart(cart: { product: Product, quantity: number }[]): void {
+        localStorage.setItem('cart', JSON.stringify(cart));
+        this.cart.next(cart);
+      }
 }
