@@ -1,5 +1,6 @@
 import { Component, NgModule, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { validarRut } from '../../validators/rut.validator';
 
@@ -10,25 +11,23 @@ import { validarRut } from '../../validators/rut.validator';
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css'
 })
+
 export class PerfilComponent implements OnInit {
   formRegistro!: FormGroup;
   mensajeExito: string = '';
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private router: Router) {}
 
   ngOnInit(): void {
     this.formRegistro = this.fb.group({
       rut: ['', [Validators.required, validarRut]],
       nombre: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [
-        Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(20),
-        this.validatePassword
-      ]],
-      confirmPassword: ['', Validators.required],
-      direccionEnvio: ['']
+      password: ['', this.passwordValidator()],
+      confirmPassword: [''],
+      telefono: ['', Validators.required],
+      permisos: [''],
+      direccionEnvio: ['', Validators.required],
     }, { validators: this.passwordMatchValidator });
 
     this.loadUserData();
@@ -42,29 +41,33 @@ export class PerfilComponent implements OnInit {
         rut: userData.rut,
         nombre: userData.nombre,
         email: userData.email,
+        telefono: userData.telefono,
+        permisos: userData.permisos,
         direccionEnvio: userData.direccionEnvio
       });
       // El campo de la contraseña y confirmación se dejan en blanco por seguridad
     }
   }
 
-  validatePassword(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-    const errors: any = {};
+  passwordValidator(): Validators | null {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      const errors: any = {};
 
-    if (!/[A-Z]/.test(value)) {
-      errors.missingUppercase = 'Debe contener al menos una letra mayúscula';
-    }
-    if (!/[a-z]/.test(value)) {
-      errors.missingLowercase = 'Debe contener al menos una letra minúscula';
-    }
-    if (!/[0-9]/.test(value)) {
-      errors.missingNumber = 'Debe contener al menos un número';
-    }
-    if (!/[\W_]/.test(value)) {
-      errors.missingSpecial = 'Debe contener al menos un carácter especial';
-    }
-    return Object.keys(errors).length ? errors : null;
+      if (value && !/[A-Z]/.test(value)) {
+        errors.missingUppercase = 'Debe contener al menos una letra mayúscula';
+      }
+      if (value && !/[a-z]/.test(value)) {
+        errors.missingLowercase = 'Debe contener al menos una letra minúscula';
+      }
+      if (value && !/[0-9]/.test(value)) {
+        errors.missingNumber = 'Debe contener al menos un número';
+      }
+      if (value && !/[\W_]/.test(value)) {
+        errors.missingSpecial = 'Debe contener al menos un carácter especial';
+      }
+      return Object.keys(errors).length ? errors : null;
+    };
   }
 
   passwordMatchValidator(group: FormGroup): ValidationErrors | null {
@@ -76,6 +79,19 @@ export class PerfilComponent implements OnInit {
   submitForm(): void {
     if (this.formRegistro.valid) {
       const updatedUserData = this.formRegistro.value;
+
+      const sesionUsuario = localStorage.getItem('sesionUsuario');
+      let currentPassword = '';
+
+      if (sesionUsuario) {
+        const userData = JSON.parse(sesionUsuario);
+        currentPassword = userData.password;
+      }
+
+      // Si no se proporcionan nuevas contraseñas, mantenemos la contraseña existente
+      if (!updatedUserData.password) {
+        updatedUserData.password = currentPassword;
+      }
       delete updatedUserData.confirmPassword;
 
       const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
@@ -91,6 +107,10 @@ export class PerfilComponent implements OnInit {
       localStorage.setItem('sesionUsuario', JSON.stringify(updatedUserData));
 
       this.mensajeExito = 'Datos actualizados con éxito.';
+      setTimeout(() => {
+        this.router.navigate(['/home']);
+      }, 4000);
+
     }
   }
 

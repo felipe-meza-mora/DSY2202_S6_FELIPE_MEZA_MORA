@@ -140,6 +140,11 @@ export class ProductService{
         const cart = localStorage.getItem('cart');
         return cart ? JSON.parse(cart) : [];
       }
+
+      clearCart(): void {
+        localStorage.removeItem('cart');
+        this.cart.next([]);
+      }
     
       private updateCart(cart: { product: Product, quantity: number }[]): void {
         localStorage.setItem('cart', JSON.stringify(cart));

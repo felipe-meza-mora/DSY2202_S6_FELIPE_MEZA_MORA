@@ -1,3 +1,18 @@
+<!-- Toast container -->
+<div aria-live="polite" aria-atomic="true" class="position-relative">
+  <div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="liveToast" class="toast align-items-center text-white bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toast-body">
+          Producto agregado al carrito.
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div class="container mt-5" *ngIf="!isAdmin; else adminView">
   <div id="cards" class="row"></div>
   <div class="container mt-5">
@@ -39,7 +54,6 @@
           <th>Descripción</th>
           <th>Imagen</th>
           <th>Precio</th>
-          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -49,14 +63,6 @@
           <td>{{ product.descripcion }}</td>
           <td><img [src]="product.thumbnailUrl" alt="{{ product.title }}" style="max-width: 100px;"></td>
           <td>{{ product.precio | currency:'':'symbol':'1.0-0' }}</td>
-          <td>
-            <button class="btn btn-warning btn-sm">
-              <i class="bi bi-pencil-fill"></i>
-            </button>
-            <button class="btn btn-danger btn-sm">
-              <i class="bi bi-trash-fill"></i>
-            </button>
-          </td>
         </tr>
       </tbody>
     </table>

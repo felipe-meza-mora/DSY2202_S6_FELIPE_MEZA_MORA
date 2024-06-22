@@ -34,7 +34,8 @@ export class SignUpComponent {
         
       ]],
       confirmPassword: ['', Validators.required],
-      direccionEnvio: ['']
+      telefono: ['', Validators.required],
+      direccionEnvio: ['',Validators.required]
     }, { validator: this.passwordMatchValidator });
   }
 
@@ -85,6 +86,7 @@ export class SignUpComponent {
         nombre: this.formRegistro.get('nombre')?.value,
         email: this.formRegistro.get('email')?.value,
         password: this.formRegistro.get('password')?.value,
+        telefono: this.formRegistro.get('telefono')?.value,
         direccionEnvio: this.formRegistro.get('direccionEnvio')?.value,
         permisos: 'cliente' // Asignar permisos de cliente por defecto
       };
@@ -102,6 +104,7 @@ export class SignUpComponent {
           nombre: 'Admin',
           email: 'admin@dyf.cl',
           password: 'Qwerty123$',
+          telefono: '123456789',
           direccionEnvio: 'Dirección de administrador',
           permisos: 'admin'
         };

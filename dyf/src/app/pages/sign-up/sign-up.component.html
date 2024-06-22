@@ -65,8 +65,21 @@
         </div>
       </div>
       <div class="mb-3">
+        <label for="telefono" class="form-label">Teléfono</label>
+        <input type="text" class="form-control" id="telefono" formControlName="telefono">
+        <div *ngIf="formRegistro.get('telefono')?.hasError('required')" class="text-danger">
+          El teléfono es requerido
+        </div>
+        <div *ngIf="formRegistro.get('telefono')?.hasError('pattern')" class="text-danger">
+          Proporcione un teléfono válido
+        </div>
+      </div>
+      <div class="mb-3">
         <label for="direccionEnvio" class="form-label">Dirección de Envío</label>
         <input type="text" class="form-control" id="direccionEnvio" formControlName="direccionEnvio">
+        <div *ngIf="formRegistro.get('direccionEnvio')?.hasError('required')" class="text-danger">
+          La dirección es requerida
+        </div>
       </div>
       <div class="mb-3 d-grid">
         <button type="submit" class="btn btn-warning text-white">Registrar</button>

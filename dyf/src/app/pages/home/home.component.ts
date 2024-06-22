@@ -5,6 +5,8 @@ import { filter, Subscription } from 'rxjs';
 import { ProductService } from '../../service/product.service';
 import { Product } from '../../models/product.model';
 
+declare var bootstrap: any; 
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -52,7 +54,21 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   addToCart(product: Product): void {
     this.productService.addToCart(product);
-    alert(`${product.title} ha sido agregado al carrito`);
+    this.showToast(`${product.title} ha sido agregado al carrito`);
+  }
+
+  private showToast(message: string): void {
+    const toastElement = document.getElementById('liveToast');
+    const toastBodyElement = document.getElementById('toast-body');
+
+    if (toastBodyElement) {
+      toastBodyElement.innerText = message;
+    }
+
+    if (toastElement) {
+      const toast = new bootstrap.Toast(toastElement);
+      toast.show();
+    }
   }
 
 }
