@@ -12,11 +12,32 @@ import { validarRut } from '../../validators/rut.validator';
   styleUrl: './perfil.component.css'
 })
 
+/**
+ * Componente para la gestión del perfil de usuario.
+ * @description Este componente permite al usuario actualizar sus datos personales, incluyendo el nombre, email, contraseña, teléfono, permisos y dirección de envío.
+ */
+
 export class PerfilComponent implements OnInit {
+
+   /**
+   * FormGroup que contiene los controles del formulario de registro.
+   * @type {FormGroup} Grupo de controles del formulario.
+   */
   formRegistro!: FormGroup;
+  
+  /**
+   * Mensaje de éxito mostrado al actualizar los datos del perfil.
+   * @type {string} Mensaje que indica que los datos se actualizaron correctamente.
+   */
+
   mensajeExito: string = '';
 
   constructor(private fb: FormBuilder, private router: Router) {}
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Inicializa el formulario de registro con validadores y carga los datos del usuario si están disponibles en el almacenamiento local.
+   */
 
   ngOnInit(): void {
     this.formRegistro = this.fb.group({
@@ -33,6 +54,11 @@ export class PerfilComponent implements OnInit {
     this.loadUserData();
   }
 
+  /**
+   * Método para cargar los datos del usuario actual en el formulario desde el almacenamiento local.
+   * Si los datos del usuario están disponibles, se establecen en el formulario de registro.
+   */
+
   loadUserData(): void {
     const sesionUsuario = localStorage.getItem('sesionUsuario');
     if (sesionUsuario) {
@@ -48,6 +74,12 @@ export class PerfilComponent implements OnInit {
       // El campo de la contraseña y confirmación se dejan en blanco por seguridad
     }
   }
+
+   /**
+   * Validador personalizado para la contraseña que verifica la complejidad de la misma.
+   * @param control Control de formulario que contiene el valor de la contraseña.
+   * @returns {ValidationErrors | null} Objeto de errores si la contraseña no cumple con los requisitos de complejidad, o null si es válida.
+   */
 
   passwordValidator(): Validators | null {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -70,11 +102,22 @@ export class PerfilComponent implements OnInit {
     };
   }
 
+   /**
+   * Validador de coincidencia de contraseñas que verifica si la contraseña y su confirmación coinciden.
+   * @param group FormGroup que contiene los campos de contraseña y confirmación.
+   * @returns {ValidationErrors | null} Objeto de errores si las contraseñas no coinciden, o null si coinciden.
+   */
+
   passwordMatchValidator(group: FormGroup): ValidationErrors | null {
     const password = group.get('password')?.value;
     const confirmPassword = group.get('confirmPassword')?.value;
     return password === confirmPassword ? null : { passwordMismatch: true };
   }
+
+  /**
+   * Método para enviar el formulario de registro.
+   * Si el formulario es válido, actualiza los datos del usuario en el almacenamiento local y muestra un mensaje de éxito antes de redirigir al usuario.
+   */
 
   submitForm(): void {
     if (this.formRegistro.valid) {
@@ -113,6 +156,10 @@ export class PerfilComponent implements OnInit {
 
     }
   }
+
+  /**
+   * Método para limpiar el formulario de registro, restableciendo todos los campos a su estado inicial.
+   */
 
   limpiarFormulario(): void {
     this.formRegistro.reset();

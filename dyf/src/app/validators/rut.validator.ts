@@ -1,5 +1,13 @@
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 
+/**
+ * Función personalizada para validar un RUT chileno.
+ * @description Valida el formato y el dígito verificador de un RUT chileno.
+ * @param {AbstractControl} control - Control de formulario que contiene el valor del RUT.
+ * @returns {ValidationErrors | null} Objeto de errores si el RUT es inválido o null si es válido.
+ */
+
+
 export function validarRut(control: AbstractControl): ValidationErrors | null {
   const rut = control.value;
   if (!rut) {

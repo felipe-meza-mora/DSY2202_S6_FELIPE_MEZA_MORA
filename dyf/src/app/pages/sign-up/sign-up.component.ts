@@ -3,6 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { validarRut } from '../../validators/rut.validator';
 
+/**
+ * @description Componente para el formulario de registro de usuarios.
+ * Este componente permite a los usuarios registrarse ingresando sus datos personales.
+ */
+
 @Component({
   selector: 'app-sign-up',
   standalone: true,
@@ -16,10 +21,23 @@ export class SignUpComponent {
     throw new Error('Method not implemented.');
   }
 
+    /**
+   * @description FormGroup que contiene los campos del formulario de registro.
+   * @type {FormGroup}
+   * @description Mensaje de éxito mostrado después de enviar el formulario de registro.
+   * @type {string | null}
+   */
+
   formRegistro!: FormGroup;
   mensajeExito: string | null = null;
 
   constructor(private f : FormBuilder) {}
+
+  /**
+   * @description Inicializa el formulario de registro con validadores personalizados.
+   * Se llama al inicio del ciclo de vida del componente.
+   * @usageNotes Llama este método en ngOnInit para configurar el formulario de registro.
+   */
 
   ngOnInit(): void {
     this.formRegistro = this.f.group({
@@ -39,6 +57,12 @@ export class SignUpComponent {
     }, { validator: this.passwordMatchValidator });
   }
 
+  /**
+   * @description Validador personalizado para verificar que las contraseñas coincidan.
+   * @param {AbstractControl} group Grupo de AbstractControl que contiene los campos password y confirmPassword.
+   * @return {ValidationErrors | null} Objeto con errores si las contraseñas no coinciden, o null si coinciden.
+   */
+
   passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
     const password = group.get('password');
     const confirmPassword = group.get('confirmPassword');
@@ -48,6 +72,12 @@ export class SignUpComponent {
     return null;
   }
 
+    /**
+   * @description Validador personalizado para verificar la fuerza de la contraseña.
+   * @param {AbstractControl} control AbstractControl que representa el campo de contraseña.
+   * @return {ValidationErrors | null} Objeto con errores específicos si la contraseña no cumple con los requisitos, o null si es válida.
+   */
+
   passwordStrengthValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value) {
@@ -55,6 +85,8 @@ export class SignUpComponent {
     }
 
     const errors: any = {};
+
+     // Validación de requisitos de contraseña
 
     if (!/[A-Z]/.test(value)) {
       errors.missingUppercase = 'La contraseña debe contener al menos una letra mayúscula';
@@ -74,6 +106,13 @@ export class SignUpComponent {
 
     return Object.keys(errors).length ? errors : null;
   }
+
+   /**
+   * @description Maneja el envío del formulario de registro.
+   * Guarda los datos del usuario en localStorage si el formulario es válido.
+   * Muestra un mensaje de éxito y limpia el formulario después de 3 segundos.
+   * @usageNotes Llama este método al hacer clic en el botón de enviar formulario en el template.
+   */
 
   submitForm(): void {
     if (this.formRegistro.valid) {
@@ -124,6 +163,12 @@ export class SignUpComponent {
       }, 3000);
     }
   }
+
+   /**
+   * @description Limpia el formulario de registro.
+   * Restablece todos los campos del formulario a su estado inicial.
+   * @usageNotes Llama este método al hacer clic en el botón de limpiar formulario en el template.
+   */
 
   limpiarFormulario() {
     this.formRegistro.reset();
